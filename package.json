@@ -12,6 +12,7 @@
     "@rdkit/rdkit": "^2023.9.2-1.0.0",
     "@tabler/icons-react": "^3.11.0",
     "3dmol": "^2.3.0",
+    "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "copy-webpack-plugin": "^12.0.2",
     "framer-motion": "^11.3.21",

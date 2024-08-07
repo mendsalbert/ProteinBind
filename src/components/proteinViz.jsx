@@ -179,6 +179,7 @@ class MoleculeStructure extends Component {
   }
 
   render() {
+    console.log("props score number:", this.props.scores);
     if (this.state.rdKitError) {
       return "Error loading renderer.";
     }
@@ -218,7 +219,9 @@ class MoleculeStructure extends Component {
             width={this.props.width}
             height={this.props.height}
           ></canvas>
-          <div className="molecule-score">Score: {this.props.scores}</div>
+          <p className="text-red-600 p-10 z-50">
+            Score: {this.props.scores.toFixed(2)}
+          </p>
         </div>
       );
     }

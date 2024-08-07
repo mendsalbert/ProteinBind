@@ -1,9 +1,20 @@
 "use client";
 import React, { useState } from "react";
 import MoleculeStructure from "../components/proteinViz";
+import BoxReveal from "@/components/ui/boxreveal";
+import DotPattern from "@/components/magicui/dot-pattern";
+import { cn } from "@/lib/utils";
+import OrbitingCircles from "@/components/magicui/orbiting-circles";
+import BlurFade from "@/components/magicui/blur-fade";
+import AnimatedShinyText from "@/components/magicui/animated-shiny-text";
+import { IconArrowRight } from "@tabler/icons-react";
+import TypingAnimation from "@/components/magicui/typing-animation";
+import Link from "next/link";
 
 const Home = () => {
-  const [smiles, setSmiles] = useState("");
+  const [smiles, setSmiles] = useState(
+    "[H][C@@]12Cc3c[nH]c4cccc(C1=C[C@H](NC(=O)N(CC)CC)CN2C)c34"
+  );
   const [numMolecules, setNumMolecules] = useState(20);
   const [minSimilarity, setMinSimilarity] = useState(0.3);
   const [particles, setParticles] = useState(30);
@@ -52,75 +63,91 @@ const Home = () => {
     }
   };
 
+  const images = Array.from({ length: 9 }, (_, i) => {
+    const isLandscape = i % 2 === 0;
+    const width = isLandscape ? 800 : 600;
+    const height = isLandscape ? 600 : 800;
+    return `https://picsum.photos/seed/${i + 1}/${width}/${height}`;
+  });
+
   return (
-    <div className="text-black bg-white">
-      <h1>SMILES to Molecule Generator</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>SMILES String:</label>
-          <input
-            type="text"
-            value={smiles}
-            onChange={(e) => setSmiles(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Number of Molecules:</label>
-          <input
-            type="number"
-            value={numMolecules}
-            onChange={(e) => setNumMolecules(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Minimum Similarity:</label>
-          <input
-            type="number"
-            step="0.01"
-            value={minSimilarity}
-            onChange={(e) => setMinSimilarity(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Particles:</label>
-          <input
-            type="number"
-            value={particles}
-            onChange={(e) => setParticles(e.target.value)}
-            required
-          />
-        </div>
-        <div>
-          <label>Iterations:</label>
-          <input
-            type="number"
-            value={iterations}
-            onChange={(e) => setIterations(e.target.value)}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? "Generating..." : "Generate Molecules"}
-        </button>
-      </form>
-      <div className="molecules-container">
-        {molecules.map((mol, index) => (
-          <MoleculeStructure
-            key={index}
-            id={`mol-${index}`}
-            structure={mol.sample}
-            width={200}
-            height={200}
-            svgMode
-            scores={mol.score}
-          />
-        ))}
+    <div className="bg-[#181818] overflow-scroll ">
+      <div className="relative flex h-[500px] w-full flex-col items-center justify-center overflow-hidden rounded-lg  bg-black md:shadow-xl">
+        <span className="pointer-events-none whitespace-pre-wrap bg-gradient-to-b from-green-700 to-green-200 bg-clip-text text-center text-8xl font-semibold leading-none text-transparent ">
+          ProteinBinds
+        </span>
+
+        {/* Inner Circles */}
+        <OrbitingCircles
+          className="size-[30px] border-none bg-transparent"
+          duration={20}
+          delay={20}
+          radius={80}
+        >
+          <Icons.whatsapp />
+        </OrbitingCircles>
+        <OrbitingCircles
+          className="size-[30px] border-none bg-transparent"
+          duration={20}
+          delay={10}
+          radius={80}
+        >
+          <Icons.notion />
+        </OrbitingCircles>
+
+        {/* Outer Circles (reverse) */}
+        <OrbitingCircles
+          className="size-[50px] border-none bg-transparent"
+          radius={190}
+          duration={20}
+          reverse
+        >
+          <Icons.googleDrive />
+        </OrbitingCircles>
+        <OrbitingCircles
+          className="size-[50px] border-none bg-transparent"
+          radius={190}
+          duration={20}
+          delay={20}
+          reverse
+        >
+          <Icons.gitHub />
+        </OrbitingCircles>
       </div>
+      <TypingAnimation
+        className="text-2xl font-semibold bg-black text-black dark:text-white"
+        text="Revolutionizing Drug Discovery"
+      />
+      <div className="z-10 flex min-h-[8rem] bg-black items-center justify-center">
+        <div
+          className={cn(
+            "group rounded-full border border-black/5 bg-neutral-100 text-base text-white transition-all ease-in hover:cursor-pointer hover:bg-neutral-200 dark:border-white/5 dark:bg-neutral-900 dark:hover:bg-neutral-800"
+          )}
+        >
+          <Link href={"/dashboard"}>
+            <AnimatedShinyText className="inline-flex items-center justify-center px-4 py-3 transition ease-out hover:text-neutral-600 hover:duration-300 hover:dark:text-neutral-400">
+              <span>✨ Introducing ProteinBind</span>
+              <IconArrowRight className="ml-1 text-2xl transition-transform duration-300 ease-in-out group-hover:translate-x-0.5" />
+            </AnimatedShinyText>
+          </Link>
+        </div>
+      </div>
+
+      <DotPattern
+        className={cn(
+          "[mask-image:radial-gradient(300px_circle_at_center,white,transparent)]"
+        )}
+      />
     </div>
   );
+};
+
+const Icons = {
+  gitHub: () => <span className="text-4xl">🧪</span>,
+  notion: () => <span className="text-4xl">🧬</span>,
+  openai: () => <span className="text-4xl">⚕️</span>,
+  googleDrive: () => <span className="text-4xl">💊</span>,
+  whatsapp: () => <span className="text-4xl">👨🏼‍🔬</span>,
 };
 
 export default Home;
