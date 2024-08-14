@@ -2,6 +2,7 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import MoleculeStructure from "@/components/MoleculeStructure";
 import { useState } from "react";
+import { Search } from "lucide-react"; // Import the search icon from react-icons
 
 interface CompoundData {
   MolecularFormula: string;
@@ -81,41 +82,42 @@ export default function PubChem() {
     }
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      fetchCompoundData();
+    }
+  };
+
   return (
     <DefaultLayout>
-      <div className="container mx-auto p-6">
-        <h1 className="text-gray-800 mb-6 text-center text-4xl  dark:text-white">
-          PubChem Compound Search
-        </h1>
-
-        <div className="mx-auto mb-6 max-w-xl">
-          <input
-            type="text"
-            value={compoundName}
-            onChange={(e) => setCompoundName(e.target.value)}
-            className="border-gray-300 w-full rounded-lg border bg-white p-3 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            placeholder="Enter a compound name (e.g., Aspirin)"
-          />
+      <div className="container mx-auto h-[140dvh] p-0">
+        <div className="mb-6 flex flex-col items-center md:flex-row md:justify-between">
+          <h2 className="text-title-md2 font-semibold text-black dark:text-white">
+            Compound Search{" "}
+          </h2>
+          <div className="relative mt-4 flex flex-1 md:mt-0 md:justify-end">
+            <input
+              type="text"
+              value={compoundName}
+              onChange={(e) => setCompoundName(e.target.value)}
+              onKeyDown={handleKeyDown}
+              className="border-gray-300 w-full rounded-lg border bg-white p-3 pl-10 text-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 md:w-96"
+              placeholder="Enter a compound name"
+            />
+            <span className="absolute inset-y-0 right-3 flex items-center">
+              <Search className="text-gray-500" />
+            </span>
+          </div>
         </div>
 
-        <div className="flex justify-center">
-          <button
-            onClick={fetchCompoundData}
-            className="rounded-lg bg-blue-600 px-6 py-3 text-lg text-white shadow-md transition duration-300 hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-50"
-            disabled={loading || !compoundName}
-          >
-            {loading ? "Loading..." : "Search"}
-          </button>
-        </div>
-
-        {error && <p className="text-red-600 mt-6 text-center">{error}</p>}
+        {error && <p className="text-red-600 mt-6">{error}</p>}
 
         {compoundData && (
-          <div className="dark:bg-gray-800 mt-8 rounded-lg bg-white p-6 shadow-lg">
-            <h2 className="text-gray-700 mb-4 text-2xl font-bold dark:text-white">
-              Compound Information
-            </h2>
-            <div className="grid grid-cols-1 gap-4 text-lg md:grid-cols-2">
+          <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2">
+            <div className="dark:bg-gray-800  space-y-3 rounded-lg bg-white p-6  shadow-md">
+              <h2 className="text-gray-700 mb-4 text-xl text-black  dark:text-white">
+                Basic Information
+              </h2>
               <p>
                 <strong className="text-gray-600 dark:text-gray-300">
                   Molecular Formula:
@@ -155,6 +157,12 @@ export default function PubChem() {
                 </strong>{" "}
                 {compoundData.IUPACName}
               </p>
+            </div>
+
+            <div className="dark:bg-gray-800 space-y-3 rounded-lg bg-white p-6 shadow-md">
+              <h2 className="text-gray-700 mb-4 text-xl text-black  dark:text-white">
+                Physical Properties
+              </h2>
               <p>
                 <strong className="text-gray-600 dark:text-gray-300">
                   XLogP:
@@ -191,30 +199,38 @@ export default function PubChem() {
                 </strong>{" "}
                 {compoundData.Charge}
               </p>
-              <p>
-                <strong className="text-gray-600 dark:text-gray-300">
-                  Hydrogen Bond Donors:
-                </strong>{" "}
-                {compoundData.HBondDonorCount}
-              </p>
-              <p>
-                <strong className="text-gray-600 dark:text-gray-300">
-                  Hydrogen Bond Acceptors:
-                </strong>{" "}
-                {compoundData.HBondAcceptorCount}
-              </p>
-              <p>
-                <strong className="text-gray-600 dark:text-gray-300">
-                  Rotatable Bonds:
-                </strong>{" "}
-                {compoundData.RotatableBondCount}
-              </p>
-              <p>
-                <strong className="text-gray-600 dark:text-gray-300">
-                  Heavy Atom Count:
-                </strong>{" "}
-                {compoundData.HeavyAtomCount}
-              </p>
+            </div>
+
+            <div className="dark:bg-gray-800 space-y-3 rounded-lg bg-white p-6 shadow-md md:col-span-2">
+              <h2 className="text-gray-700 mb-4 text-xl text-black  dark:text-white">
+                Additional Information
+              </h2>
+              <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
+                <p>
+                  <strong className="text-gray-600 dark:text-gray-300">
+                    Hydrogen Bond Donors:
+                  </strong>{" "}
+                  {compoundData.HBondDonorCount}
+                </p>
+                <p>
+                  <strong className="text-gray-600 dark:text-gray-300">
+                    Hydrogen Bond Acceptors:
+                  </strong>{" "}
+                  {compoundData.HBondAcceptorCount}
+                </p>
+                <p>
+                  <strong className="text-gray-600 dark:text-gray-300">
+                    Rotatable Bonds:
+                  </strong>{" "}
+                  {compoundData.RotatableBondCount}
+                </p>
+                <p>
+                  <strong className="text-gray-600 dark:text-gray-300">
+                    Heavy Atom Count:
+                  </strong>{" "}
+                  {compoundData.HeavyAtomCount}
+                </p>
+              </div>
             </div>
           </div>
         )}
