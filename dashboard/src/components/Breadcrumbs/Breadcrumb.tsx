@@ -4,9 +4,13 @@ import React from "react";
 
 interface BreadcrumbProps {
   pageName: string;
+  containActionButton?: boolean;
 }
 
-const Breadcrumb: React.FC<BreadcrumbProps> = ({ pageName }) => {
+const Breadcrumb: React.FC<BreadcrumbProps> = ({
+  pageName,
+  containActionButton,
+}) => {
   const openModal = (modalId: string) => {
     const modal = document.getElementById(modalId) as HTMLDialogElement;
     if (modal) {
@@ -20,16 +24,18 @@ const Breadcrumb: React.FC<BreadcrumbProps> = ({ pageName }) => {
         {pageName}
       </h2>
 
-      <nav>
-        <ol className="flex items-center gap-2">
-          <li
-            onClick={() => openModal("my_modal_1")}
-            className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-center font-medium text-white"
-          >
-            Add Molecule
-          </li>
-        </ol>
-      </nav>
+      {containActionButton && (
+        <nav>
+          <ol className="flex items-center gap-2">
+            <li
+              onClick={() => openModal("my_modal_1")}
+              className="cursor-pointer rounded-lg bg-primary px-4 py-2 text-center font-medium text-white"
+            >
+              Add Molecule
+            </li>
+          </ol>
+        </nav>
+      )}
 
       {/* Reusable Modal Component */}
       <Modal

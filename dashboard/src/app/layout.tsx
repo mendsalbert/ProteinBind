@@ -5,6 +5,10 @@ import "@/css/style.css";
 import React, { useEffect, useState } from "react";
 import Loader from "@/components/common/Loader";
 
+import * as Ably from "ably";
+import { AblyProvider, ChannelProvider } from "ably/react";
+import { SessionProvider } from "next-auth/react";
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -17,14 +21,23 @@ export default function RootLayout({
     setTimeout(() => setLoading(false), 1000);
   }, []);
 
+  const client = new Ably.Realtime({
+    key: "xiEQTw.SBJKWA:Kv7RDv6PngxN8y8ttHsOWHDQqchaEYtU9rgKefhsl7o",
+  });
   return (
     <html lang="en">
       {/* <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script> */}
       <script src="https://unpkg.com/@rdkit/rdkit/dist/RDKit_minimal.js"></script>
       <body suppressHydrationWarning={true}>
-        <div className="font-poppins dark:bg-boxdark-2 dark:text-bodydark ">
-          {loading ? <Loader /> : children}
-        </div>
+        <SessionProvider>
+          <AblyProvider client={client}>
+            <ChannelProvider channelName="chat-demo">
+              <div className="font-poppins dark:bg-boxdark-2 dark:text-bodydark ">
+                {loading ? <Loader /> : children}
+              </div>
+            </ChannelProvider>
+          </AblyProvider>
+        </SessionProvider>
       </body>
     </html>
   );

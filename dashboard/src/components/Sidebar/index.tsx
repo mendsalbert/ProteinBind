@@ -7,7 +7,14 @@ import Image from "next/image";
 import SidebarItem from "@/components/Sidebar/SidebarItem";
 import ClickOutside from "@/components/ClickOutside";
 import useLocalStorage from "@/hooks/useLocalStorage";
-import { LayoutGrid, Atom, Network, Microscope, Settings } from "lucide-react";
+import {
+  LayoutGrid,
+  Atom,
+  Network,
+  Microscope,
+  Settings,
+  MessageSquareText,
+} from "lucide-react";
 interface SidebarProps {
   sidebarOpen: boolean;
   setSidebarOpen: (arg: boolean) => void;
@@ -37,6 +44,11 @@ const menuGroups = [
         icon: <Microscope size={25} />,
         label: "Research",
         route: "/research",
+      },
+      {
+        icon: <MessageSquareText size={25} />,
+        label: "Messages",
+        route: "/message",
       },
 
       // {
@@ -160,8 +172,8 @@ const menuGroups = [
         label: "Authentication",
         route: "#",
         children: [
-          { label: "Sign In", route: "/auth/signin" },
-          { label: "Sign Up", route: "/auth/signup" },
+          { label: "Sign In", route: "/auth-page/signin" },
+          { label: "Sign Up", route: "/auth-page/signup" },
         ],
       },
     ],
