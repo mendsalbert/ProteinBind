@@ -1,13 +1,9 @@
 "use server";
-import mongoose from "mongoose"; // Import mongoose
-import { revalidatePath } from "next/cache";
+import mongoose from "mongoose";
 import Group from "../database/models/group.model";
-import User from "../database/models/user.model";
 import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 
-// CREATE GROUP
-// CREATE GROUP
 export async function createGroup(
   groupName: string,
   creatorId: string,
@@ -16,13 +12,12 @@ export async function createGroup(
   try {
     await connectToDatabase();
 
-    // Ensure the creator is added as a member of the group
     const members = Array.from(
       new Set([
         creatorId,
         ...memberIds.map((id) => new mongoose.Types.ObjectId(id)),
       ]),
-    ); // Convert memberIds to ObjectId
+    );
 
     const newGroup = await Group.create({
       name: groupName,
@@ -37,7 +32,6 @@ export async function createGroup(
   }
 }
 
-// ADD MEMBER TO GROUP
 export async function addMemberToGroup(groupId: string, userId: string) {
   try {
     await connectToDatabase();
@@ -45,7 +39,6 @@ export async function addMemberToGroup(groupId: string, userId: string) {
     const group = await Group.findById(groupId);
     if (!group) throw new Error("Group not found");
 
-    // Check if user is already in the group
     if (!group.members.includes(userId)) {
       group.members.push(userId);
       await group.save();
@@ -58,7 +51,6 @@ export async function addMemberToGroup(groupId: string, userId: string) {
   }
 }
 
-// ADD MESSAGE TO GROUP
 export async function addMessageToGroup(
   groupId: string,
   userId: string,
@@ -84,7 +76,6 @@ export async function addMessageToGroup(
   }
 }
 
-// GET GROUP BY ID
 export async function getGroupById(groupId: string) {
   try {
     await connectToDatabase();
@@ -102,7 +93,6 @@ export async function getGroupById(groupId: string) {
   }
 }
 
-// GET ALL GROUPS
 export async function getAllGroups() {
   try {
     await connectToDatabase();
@@ -119,7 +109,6 @@ export async function getAllGroups() {
   }
 }
 
-// GET GROUP MESSAGES
 export async function getGroupMessages(groupId: string) {
   try {
     await connectToDatabase();

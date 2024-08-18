@@ -7,29 +7,24 @@ import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 import { sendVerificationEmail, sendResetPasswordEmail } from "./email.actions";
 
-// CREATE USER WITH PASSWORD ENCRYPTION AND EMAIL VERIFICATION
 export async function createUser(user: CreateUserParams) {
   try {
     await connectToDatabase();
 
-    // Check if the user already exists by email
     const existingUser = await User.findOne({ email: user.email });
     if (existingUser) {
       throw new Error("User already exists with this email");
     }
 
-    // Hash the password before saving the user
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(user.password, salt);
 
-    // Create a new user
     const newUser = await User.create({
       ...user,
       password: hashedPassword,
       userBio: user.userBio || "",
     });
 
-    // Generate verification URL and send verification email
     const verificationUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/verify-email?token=${newUser._id}`;
     await sendVerificationEmail(
       newUser.email,
@@ -47,36 +42,29 @@ export async function createUser(user: CreateUserParams) {
   }
 }
 
-// LOGIN USER FUNCTION
 export async function loginUser(email: string, password: string) {
   try {
     await connectToDatabase();
 
-    // Find the user by email
     const user = await User.findOne({ email });
     if (!user) throw new Error("Invalid credentials");
 
-    // Compare the provided password with the stored hashed password
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) throw new Error("Invalid credentials");
 
-    // Return user data after successful login
     return JSON.parse(JSON.stringify(user));
   } catch (error) {
     handleError(error);
   }
 }
 
-// VERIFY EMAIL FUNCTION
 export async function verifyEmail(token: string) {
   try {
     await connectToDatabase();
 
-    // Find the user by the token (userId in this case)
     const user = await User.findById(token);
     if (!user) throw new Error("Invalid token or user not found");
 
-    // Update user as verified
     user.isEmailVerified = true;
     await user.save();
 
@@ -86,7 +74,6 @@ export async function verifyEmail(token: string) {
   }
 }
 
-// REQUEST PASSWORD RESET FUNCTION
 export async function requestPasswordReset(email: string) {
   try {
     await connectToDatabase();
@@ -107,20 +94,16 @@ export async function requestPasswordReset(email: string) {
   }
 }
 
-// RESET PASSWORD FUNCTION
 export async function resetPassword(token: string, newPassword: string) {
   try {
     await connectToDatabase();
 
-    // Find the user by the token (userId in this case)
     const user = await User.findById(token);
     if (!user) throw new Error("Invalid token or user not found");
 
-    // Hash the new password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
 
-    // Update the user's password
     user.password = hashedPassword;
     await user.save();
 
@@ -130,7 +113,6 @@ export async function resetPassword(token: string, newPassword: string) {
   }
 }
 
-// READ USER BY ID
 export async function getUserById(userId: string) {
   try {
     await connectToDatabase();
@@ -142,7 +124,6 @@ export async function getUserById(userId: string) {
   }
 }
 
-// UPDATE USER
 export async function updateUser(Id: string, user: UpdateUserParams) {
   try {
     await connectToDatabase();
@@ -156,7 +137,6 @@ export async function updateUser(Id: string, user: UpdateUserParams) {
   }
 }
 
-// DELETE USER
 export async function deleteUser(Id: string) {
   try {
     await connectToDatabase();
@@ -175,7 +155,6 @@ export async function deleteUser(Id: string) {
   }
 }
 
-// USE CREDITS
 export async function updateCredits(userId: string, creditFee: number) {
   try {
     await connectToDatabase();
@@ -194,12 +173,9 @@ export async function updateCredits(userId: string, creditFee: number) {
   }
 }
 
-// GET USER BY EMAIL
 export async function getUserByEmail(email: string) {
   try {
     await connectToDatabase();
-
-    // Find the user by email
     const user = await User.findOne({ email });
     if (!user) throw new Error("User not found");
 

@@ -6,7 +6,6 @@ import { connectToDatabase } from "../database/mongoose";
 import { handleError } from "../utils";
 import mongoose from "mongoose";
 
-// CREATE MOLECULE GENERATION HISTORY
 export async function createMoleculeGenerationHistory(
   payload: MoleculeGenerationHistoryType,
   userId: string,
@@ -16,7 +15,7 @@ export async function createMoleculeGenerationHistory(
 
     const newHistoryEntry = await MoleculeGenerationHistory.create({
       ...payload,
-      user: new mongoose.Types.ObjectId(userId), // Associate with the user
+      user: new mongoose.Types.ObjectId(userId),
     });
 
     return JSON.parse(JSON.stringify(newHistoryEntry));
@@ -26,13 +25,12 @@ export async function createMoleculeGenerationHistory(
   }
 }
 
-// GET ALL MOLECULE GENERATION HISTORY
 export async function getMoleculeGenerationHistoryByUser(userId: string) {
   try {
     await connectToDatabase();
 
     const historyEntries = await MoleculeGenerationHistory.find({
-      user: userId, // Filter by user
+      user: userId,
     }).sort({ createdAt: -1 });
 
     return JSON.parse(JSON.stringify(historyEntries));
@@ -42,7 +40,6 @@ export async function getMoleculeGenerationHistoryByUser(userId: string) {
   }
 }
 
-// GET MOLECULE GENERATION HISTORY BY ID
 export async function getMoleculeGenerationHistoryById(historyId: string) {
   try {
     await connectToDatabase();
@@ -57,7 +54,6 @@ export async function getMoleculeGenerationHistoryById(historyId: string) {
   }
 }
 
-// DELETE A MOLECULE GENERATION HISTORY ENTRY
 export async function deleteMoleculeGenerationHistory(entryId: string) {
   try {
     await connectToDatabase();
