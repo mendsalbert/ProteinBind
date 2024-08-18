@@ -3,7 +3,7 @@ import Breadcrumb from "@/components/ComponentHeader/ComponentHeader";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import MoleculeStructure from "../../components/MoleculeStructure/index";
 import React, { useState, useEffect } from "react";
-import { useSession } from "next-auth/react"; // Import NextAuth session hook
+import { useSession } from "next-auth/react";
 import {
   createMoleculeGenerationHistory,
   getMoleculeGenerationHistoryByUser,
@@ -11,7 +11,7 @@ import {
 import { getUserByEmail } from "@/lib/actions/user.actions";
 
 const ModalLayout = () => {
-  const { data: session } = useSession(); // Get session data (includes user)
+  const { data: session } = useSession();
   const [smiles, setSmiles] = useState(
     "CCN(CC)C(=O)[C@@]1(C)Nc2c(ccc3ccccc23)C[C@H]1N(C)C",
   );
@@ -22,15 +22,14 @@ const ModalLayout = () => {
   const [molecules, setMolecules] = useState([]);
   const [loading, setLoading] = useState(false);
   const [history, setHistory] = useState([]);
-  const [userId, setUserId] = useState<string | null>(null); // Store user ID
+  const [userId, setUserId] = useState<string | null>(null);
 
-  // Fetch user data and history when the component mounts
   useEffect(() => {
     const fetchUserData = async () => {
       if (session?.user?.email) {
         try {
-          const user = await getUserByEmail(session.user.email); // Fetch user by email
-          setUserId(user._id); // Set user ID from the fetched user
+          const user = await getUserByEmail(session.user.email);
+          setUserId(user._id);
           const historyFromServer = await getMoleculeGenerationHistoryByUser(
             user._id,
           );
@@ -78,13 +77,12 @@ const ModalLayout = () => {
 
       const data = await response.json();
       const generatedMolecules = JSON.parse(data.molecules).map((mol: any) => ({
-        structure: mol.sample, // Change 'sample' to 'structure'
+        structure: mol.sample,
         score: mol.score,
       }));
 
       setMolecules(generatedMolecules);
 
-      // Save to database with the logged-in user's ID
       if (userId) {
         await createMoleculeGenerationHistory(
           {
@@ -95,10 +93,9 @@ const ModalLayout = () => {
             iterations: parseInt(iterations),
             generatedMolecules,
           },
-          userId, // Pass the userId
+          userId,
         );
 
-        // Fetch updated history
         const updatedHistory = await getMoleculeGenerationHistoryByUser(userId);
         setHistory(updatedHistory);
       } else {
@@ -206,7 +203,6 @@ const ModalLayout = () => {
           </div>
         </div>
 
-        {/* Molecule History */}
         <div className="flex flex-col gap-9">
           <div className="rounded-lg border border-stroke bg-white p-3 shadow-default dark:border-[#121212] dark:bg-[#181818]">
             <h3 className="font-medium text-black dark:text-white">

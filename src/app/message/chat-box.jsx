@@ -32,14 +32,12 @@ function ChatBox() {
 
   const bottomRef = useRef(null);
 
-  // Scroll to the bottom of the chat when messages change
   useEffect(() => {
     if (bottomRef.current) {
       bottomRef.current.scrollIntoView({ behavior: "smooth" });
     }
   }, [receivedMessages]);
 
-  // Fetch all groups when the component mounts
   useEffect(() => {
     const fetchGroups = async () => {
       const groupsFromServer = await getAllGroups();
@@ -50,27 +48,23 @@ function ChatBox() {
     fetchGroups();
   }, [session?.user?.email]);
 
-  // Create a new group
   const handleCreateGroup = async (groupName) => {
     if (groupName && !groups.some((group) => group.name === groupName)) {
-      const newGroup = await createGroup(groupName, user_._id); // Create group in the database
+      const newGroup = await createGroup(groupName, user_._id);
       setGroups([...groups, newGroup]);
       setCurrentGroup(newGroup);
-      setMessages([]); // Clear messages when switching groups
+      setMessages([]);
     }
   };
 
-  // Join a group and fetch its messages
   const handleJoinGroup = async (groupId) => {
     const selectedGroup = groups.find((group) => group._id === groupId);
     setCurrentGroup(selectedGroup);
 
-    const groupMessages = await getGroupMessages(groupId); // Fetch group messages
-
-    // Ensure that the fetched messages are in the correct format for rendering
+    const groupMessages = await getGroupMessages(groupId);
     const formattedMessages = groupMessages.map((msg) => ({
       ...msg,
-      connectionId: msg.sender._id, // Adapt the sender id to connectionId
+      connectionId: msg.sender._id,
       name: `${msg.sender.firstName} ${msg.sender.lastName}`,
       image: msg.sender.photo || "/default-avatar.png",
       data: msg.text,
@@ -80,7 +74,6 @@ function ChatBox() {
     setMessages(formattedMessages);
   };
 
-  // Send a chat message
   const sendChatMessage = async (messageText) => {
     try {
       if (currentGroup && channel) {
@@ -92,12 +85,11 @@ function ChatBox() {
           image: resizedImage,
           data: messageText,
           timestamp: new Date().toISOString(),
-          connectionId: ably.connection.id, // Assign the current user's connection ID
+          connectionId: ably.connection.id,
         };
 
-        // Broadcast the message via Ably
         await channel.publish("chat-message", message);
-        await addMessageToGroup(currentGroup._id, user_._id, messageText); // Save message to the database
+        await addMessageToGroup(currentGroup._id, user_._id, messageText);
 
         setMessageText("");
       }
@@ -106,13 +98,11 @@ function ChatBox() {
     }
   };
 
-  // Handle form submission
   const handleFormSubmission = (event) => {
     event.preventDefault();
     sendChatMessage(messageText);
   };
 
-  // Render messages
   const renderedMessages = receivedMessages.map((message, index) => {
     const isMe = message.connectionId === ably.connection.id;
     return (
@@ -184,7 +174,6 @@ function ChatBox() {
               {renderedMessages.length > 0 ? (
                 <>
                   {renderedMessages}
-                  {/* Add an empty div that will act as the scroll anchor */}
                   <div ref={bottomRef}></div>
                 </>
               ) : (

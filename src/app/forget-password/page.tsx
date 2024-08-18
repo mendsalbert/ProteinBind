@@ -3,7 +3,7 @@ import React, { useState, useEffect } from "react";
 import {
   getUserByEmail,
   requestPasswordReset,
-} from "@/lib/actions/user.actions"; // Adjust the path to your action
+} from "@/lib/actions/user.actions";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import { useRouter } from "next/navigation";
 import { MailIcon } from "lucide-react";
@@ -17,14 +17,14 @@ const ForgetPasswordPage: React.FC = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const router = useRouter();
   const { data: session } = useSession();
-  const [user, setUser] = useState<string | any>(null); // Correct initial state type
+  const [user, setUser] = useState<string | any>(null);
 
   useEffect(() => {
     const fetchUser = async () => {
       if (session?.user?.email) {
         try {
           const fetchedUser = await getUserByEmail(session.user.email);
-          setUser(fetchedUser); // Assuming fetchedUser is of string type, adjust if it's an object
+          setUser(fetchedUser);
         } catch (error) {
           console.error("Failed to fetch user:", error);
         }
@@ -111,7 +111,6 @@ const ForgetPasswordPage: React.FC = () => {
           </>
         )}
 
-        {/* Only one instance of checking for error */}
         {status === "error" && (
           <p>There was an error sending the reset link. Please try again.</p>
         )}
