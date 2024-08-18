@@ -22,7 +22,6 @@ const Settings = () => {
   const [errors, setErrors] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
-  // Fetch user data when component mounts
   useEffect(() => {
     const fetchUserData = async () => {
       if (session?.user?.email) {
@@ -32,7 +31,7 @@ const Settings = () => {
           lastName: user.lastName,
           email: user.email,
           userBio: user.userBio || "",
-          photo: user.photo || "/images/user/user-03.png", // Use default image if not provided
+          photo: user.photo || "/images/user/user-03.png",
           id: user._id,
         });
       }
@@ -41,7 +40,6 @@ const Settings = () => {
     fetchUserData();
   }, [session?.user?.email]);
 
-  // Handle personal information form submission
   const handlePersonalInfoSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -49,20 +47,17 @@ const Settings = () => {
     setIsLoading(true);
 
     try {
-      // Prepare updated user data
       const updatedUser = {
         firstName: userData.firstName,
         lastName: userData.lastName,
         userBio: userData.userBio,
         photo: userData.photo,
         email: userData.email,
-
-        // Use the existing photo unless changed by the user
       };
 
       if (userData.id) {
         const updated = await updateUser(userData.id, updatedUser);
-        setUserData(updated); // Update UI with new data
+        setUserData(updated);
       }
 
       setIsLoading(false);
@@ -75,7 +70,6 @@ const Settings = () => {
 
   console.log(userData);
 
-  // Handle image upload form submission
   const handleImageUploadSubmit = async (
     e: React.FormEvent<HTMLFormElement>,
   ) => {
@@ -83,20 +77,18 @@ const Settings = () => {
     setIsLoading(true);
 
     try {
-      // Convert image to base64 if a new image is selected
       let base64Image = userData.photo;
       if (imageFile) {
         base64Image = await convertImageToBase64(imageFile);
       }
 
-      // Update user with the new image
       if (userData.id) {
         const updatedUser = {
           ...userData,
-          photo: base64Image, // Set the new base64 image
+          photo: base64Image,
         };
         const updated = await updateUser(userData.id, updatedUser);
-        setUserData(updated); // Update UI with new data
+        setUserData(updated);
       }
 
       setIsLoading(false);
@@ -107,7 +99,6 @@ const Settings = () => {
     }
   };
 
-  // Convert image file to Base64
   const convertImageToBase64 = async (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -117,7 +108,6 @@ const Settings = () => {
     });
   };
 
-  // Handle input field changes
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   ) => {
@@ -128,13 +118,12 @@ const Settings = () => {
     }));
   };
 
-  // Handle profile image change
   const handleFileChange = (e: any) => {
     if (e.target.files && e.target.files[0]) {
       setImageFile(e.target.files[0]);
       setUserData((prevData) => ({
         ...prevData,
-        photo: URL.createObjectURL(e.target.files[0]), // Update the preview image
+        photo: URL.createObjectURL(e.target.files[0]),
       }));
     }
   };
@@ -280,7 +269,7 @@ const Settings = () => {
                         <button
                           type="button"
                           className="text-sm hover:text-primary"
-                          onClick={() => setImageFile(null)} // Reset the image on delete
+                          onClick={() => setImageFile(null)}
                         >
                           Delete
                         </button>

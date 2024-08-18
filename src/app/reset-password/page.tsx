@@ -5,7 +5,7 @@ import { LoaderCircle, LockIcon } from "lucide-react";
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import Breadcrumb from "@/components/ComponentHeader/ComponentHeader";
 import { useRouter, useSearchParams } from "next/navigation";
-import { resetPassword } from "@/lib/actions/user.actions"; // Replace with your reset password action
+import { resetPassword } from "@/lib/actions/user.actions";
 
 const ResetPasswordPage: React.FC = () => {
   const [password, setPassword] = useState("");
@@ -22,7 +22,6 @@ const ResetPasswordPage: React.FC = () => {
     setError(null);
     setIsLoading(true);
 
-    // Basic form validation
     if (!password || !confirmPassword) {
       setError("Please fill in all fields.");
       setIsLoading(false);
@@ -36,10 +35,8 @@ const ResetPasswordPage: React.FC = () => {
     }
 
     try {
-      // Call the resetPassword action with the token and new password
       await resetPassword(token as string, password);
 
-      // Show success message and redirect after a delay
       setSuccess(true);
       setTimeout(() => {
         router.push("/auth-page/signin");

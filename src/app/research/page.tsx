@@ -2,26 +2,7 @@
 import DefaultLayout from "@/components/Layouts/DefaultLayout";
 import MoleculeStructure from "@/components/MoleculeStructure";
 import { useState } from "react";
-import { Search } from "lucide-react"; // Import the search icon from react-icons
-
-interface CompoundData {
-  MolecularFormula: string;
-  MolecularWeight: string;
-  InChIKey: string;
-  CanonicalSMILES: string;
-  IsomericSMILES: string;
-  IUPACName: string;
-  XLogP: string;
-  ExactMass: string;
-  MonoisotopicMass: string;
-  TPSA: string;
-  Complexity: string;
-  Charge: string;
-  HBondDonorCount: string;
-  HBondAcceptorCount: string;
-  RotatableBondCount: string;
-  HeavyAtomCount: string;
-}
+import { Search } from "lucide-react";
 
 export default function PubChem() {
   const [compoundName, setCompoundName] = useState("");
