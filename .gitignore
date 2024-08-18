@@ -6,14 +6,15 @@
 .pnp.js
 .yarn/install-state.gz
 descriptions.txt
-
+dashboard
 # testing
 /coverage
 oldpage
 # next.js
 /.next/
 /out/
-
+.env
+/.env
 # production
 /build
 

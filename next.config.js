@@ -11,7 +11,7 @@ const nextConfig = {
             to: "static/chunks",
           },
         ],
-      })
+      }),
     );
 
     if (!isServer) {
