@@ -9,6 +9,8 @@ import { useUser } from "../context/UserContext";
 const Profile = () => {
   const user = useUser();
 
+  console.log(user);
+
   return (
     <DefaultLayout>
       <div className="mx-auto max-w-242.5">
