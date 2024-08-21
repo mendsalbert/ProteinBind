@@ -5,7 +5,7 @@ import ChatBox from "./chat-box.jsx";
 
 export default function Chat() {
   const client = new Ably.Realtime({
-    key: process.env.ABLY_API_KEY,
+    key: "VpPesA.e058xw:HltRuWqP4MBNSxON5IERYcR4ODsj96dUmpcwC84keGk",
   });
   return <ChatBox />;
 }
