@@ -14,7 +14,7 @@ oldpage
 /.env
 # production
 /build
-
+outline.md
 # misc
 .DS_Store
 *.pem
