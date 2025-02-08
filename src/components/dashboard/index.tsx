@@ -2,18 +2,18 @@
 import dynamic from "next/dynamic";
 import React from "react";
 
-import CTACard from "./components/CTACard";
+import CTACard from "@/components/dashboard/components/CTACard";
 import { AtomIcon, MessageCircle, Network, SearchIcon } from "lucide-react";
 
 const DashboardCardMap = dynamic(
-  () => import("@/components/Dashboard/components/DashboardCardMap"),
+  () => import("@/components/dashboard/components/DashboardCardMap"),
   {
     ssr: false,
   },
 );
 
 const DashboardCardChat = dynamic(
-  () => import("@/components/Dashboard/components/DashboardCardChat"),
+  () => import("@/components/dashboard/components/DashboardCardChat"),
   {
     ssr: false,
   },
